@@ -76,7 +76,7 @@ void setup() {
 }
 
 void loop() {
-  Time = millis();
+  Time = millis();//using ms, 1s=1000ms 
 
   sensors_event_t a, g, temp;
   mpu.getEvent(&a, &g, &temp);
@@ -87,14 +87,6 @@ void loop() {
 
   Serial.print("velocity is");
   Serial.println (velocity);
-
-
-
-  float a, b, c;
-  for (int a = 0; a < 255; a++){
-    a = a + a*delayTime;
-    delay(10);
-  }
 
 //values for rotation
   if (IMU.gyroscopeAvailable()) {
@@ -126,13 +118,14 @@ void loop() {
     Serial.println(" m/s^2");
   }
 
+//value for Velocity
   Serial.println("");
   previousTime = millis();
   previousVelocity = (velocityChange);
   delay(200);
 
+//about WiFi status
   Serial.println("Succeed");
   Serial.println(WiFi.localIP());
   delay(500);
-
 }
