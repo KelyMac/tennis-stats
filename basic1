@@ -1,0 +1,68 @@
+//This program is to calculate angle/speed by Arduino Nano33 BLE
+
+#include <Arduino_LSM9DS1.h>
+
+void setup() {
+  Serial.begin(9600);
+  while (!Serial)
+    delay(10);//wait for serial console opens
+  Serial.println("MPU6050 starts testing:")
+
+  //initialize
+  if (!mpu.begin()){
+    Serial.println("Failed to initialize MPU6050")
+    while(1){
+      delay(10);
+    }
+  }
+
+  Serial.print("Gyroscope sample rate = ");
+  Serial.print(IMU.gyroscopeSampleRate());
+  Serial.println(" Hz");
+  Serial.println();
+  Serial.println("Gyroscope in degrees/second");
+  Serial.println("X\tY\tZ");  
+
+  Serial.print("Accelerometer sample rate = ");
+  Serial.print(IMU.accelerationSampleRate());
+  Serial.println(" Hz");
+  Serial.println();
+  Serial.println("Acceleration in g's");
+  Serial.println("X\tY\tZ");
+}
+
+void loop() {
+  float x, y, z;
+  float a, b, c;
+
+//values for rotation
+  if (IMU.gyroscopeAvailable()) {
+    IMU.readGyroscope(x, y, z);
+
+    Serial.print("Rotation X: ");
+    Serial.print(x);
+    Serial.print(", Y: ");
+    Serial.print('\t');
+    Serial.print(y);
+    Serial.print(", Z: ");
+    Serial.print('\t');
+    Serial.println(z);
+    Serial.println(" rad/s");
+  }
+
+//values for acceleration
+  if (IMU.accelerationAvailable()) {
+    IMU.readAcceleration(a, b, c);
+
+    Serial.print("Acceleration X: ");
+    Serial.print(a);
+    Serial.print(", Y: ");
+    Serial.print('\t');
+    Serial.print(b);
+    Serial.print(", Z: ");
+    Serial.print('\t');
+    Serial.println(c);
+    Serial.println(" m/s^2");
+  }
+
+}
