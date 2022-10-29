@@ -1,0 +1,138 @@
+//This program is to calculate angle/speed by MPU6050
+
+#include <WiFi.h>//Type the library
+#include <Adafruit_MPU6050.h>
+
+char ssid[] = "WiFiname";//Type wifi name
+char pass[] = "";//Type the password
+
+void initWiFi(){
+  WiFi.mode(WIFI_STA);//Set the WiFi connection mode to STA
+  WiFi.begin(ssid,passwd);//connected
+  while(WiFi.status()!=WL_CONNECTED){
+    Serial.println("Not success");
+    delay(500);
+}
+
+float Time = 0;
+float previousTtime = 0;
+float previousVelocity = 0;
+float Velocity = 0;
+
+
+void setup() {
+  Serial.begin(115200);
+  initWiFi();
+
+  while (!Serial)
+    delay(10);//wait for serial console opens
+  Serial.println("Starts testing:")
+
+  //initialize
+  if (!mpu.begin()){
+    Serial.println("Failed to initialize")
+    while(1){
+      delay(10);
+    }
+  }
+
+  Serial.println("MPU6050 Found!");
+
+  mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
+  Serial.print("Accelerometer range set to: ");
+  switch (mpu.getAccelerometerRange()) {
+  case MPU6050_RANGE_2_G:
+    Serial.println("+-2G");
+    break;
+  case MPU6050_RANGE_4_G:
+    Serial.println("+-4G");
+    break;
+  case MPU6050_RANGE_8_G:
+    Serial.println("+-8G");
+    break;
+  case MPU6050_RANGE_16_G:
+    Serial.println("+-16G");
+    break;
+  }
+  mpu.setGyroRange(MPU6050_RANGE_500_DEG);
+  Serial.print("Gyro range set to: ");
+  switch (mpu.getGyroRange()) {
+  case MPU6050_RANGE_250_DEG:
+    Serial.println("+- 250 deg/s");
+    break;
+  case MPU6050_RANGE_500_DEG:
+    Serial.println("+- 500 deg/s");
+    break;
+  case MPU6050_RANGE_1000_DEG:
+    Serial.println("+- 1000 deg/s");
+    break;
+  case MPU6050_RANGE_2000_DEG:
+    Serial.println("+- 2000 deg/s");
+    break;
+  }
+
+  Serial.println("");
+  delay(100);
+}
+
+void loop() {
+  Time = millimeters();
+
+  sensors_event_t a, g, temp;
+  mpu.getEvent(&a, &g, &temp);
+
+  float velocityChange = (Time/1000 - previousTime/1000) * (a.acceleration.x);
+  float Velocity = (velocityChange) + previousVelocity;
+  Serial.print(Time/1000 - previousTime/1000);
+
+  Serial.print("velocity is");
+  Serial.println (velocity);
+
+
+
+  float a, b, c;
+  for (int a = 0; a < 255; a++){
+    a = a + a*delayTime;
+    delay(10);
+  }
+
+//values for rotation
+  if (IMU.gyroscopeAvailable()) {
+    IMU.readGyroscope(x, y, z);
+
+    Serial.print("Rotation X: ");
+    Serial.print(x);
+    Serial.print(", Y: ");
+    Serial.print('\t');
+    Serial.print(y);
+    Serial.print(", Z: ");
+    Serial.print('\t');
+    Serial.println(z);
+    Serial.println(" rad/s");
+  }
+
+//values for acceleration
+  if (IMU.accelerationAvailable()) {
+    IMU.readAcceleration(a, b, c);
+
+    Serial.print("Acceleration X: ");
+    Serial.print(a);
+    Serial.print(", Y: ");
+    Serial.print('\t');
+    Serial.print(b);
+    Serial.print(", Z: ");
+    Serial.print('\t');
+    Serial.println(c);
+    Serial.println(" m/s^2");
+  }
+
+  Serial.println("");
+  previousTime = millimeters();
+  previousVelocity = (velocityChange);
+  delay(200);
+
+  Serial.println("Succeed");
+  Serial.println(WiFi.localIP());
+  delay(500);
+
+}
