@@ -76,7 +76,7 @@ void setup() {
 }
 
 void loop() {
-  Time = millimeters();
+  Time = millis();
 
   sensors_event_t a, g, temp;
   mpu.getEvent(&a, &g, &temp);
@@ -127,7 +127,7 @@ void loop() {
   }
 
   Serial.println("");
-  previousTime = millimeters();
+  previousTime = millis();
   previousVelocity = (velocityChange);
   delay(200);
 
